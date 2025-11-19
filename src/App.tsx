@@ -1,32 +1,26 @@
 import { useState, useRef, useEffect } from "react"
 import Die from "./Die"
-import { nanoid } from "nanoid"
+import { generateAllNewDice } from "./components/utils"
+import type { Dice } from "./components/utils"
 import Confetti from "react-confetti"
+import type { JSX } from "react"
+
+type DiceNoFn = Omit<Dice, "hold">
 
 export default function App() {
-    const [dice, setDice] = useState(() => generateAllNewDice())
-    const buttonRef = useRef(null)
+    const [dice, setDice] = useState<DiceNoFn[]>(() => generateAllNewDice())
+    const buttonRef = useRef<HTMLButtonElement | null>(null)
 
-    const gameWon = dice.every(die => die.isHeld) &&
-        dice.every(die => die.value === dice[0].value)
+    const gameWon: boolean = dice.every((die:DiceNoFn):boolean => die.isHeld) &&
+        dice.every((die:DiceNoFn):boolean => die.value === dice[0].value)
         
     useEffect(() => {
         if (gameWon) {
-            buttonRef.current.focus()
+            buttonRef.current?.focus()
         }
     }, [gameWon])
-
-    function generateAllNewDice() {
-        return new Array(10)
-            .fill(0)
-            .map(() => ({
-                value: Math.ceil(Math.random() * 6),
-                isHeld: false,
-                id: nanoid()
-            }))
-    }
     
-    function rollDice() {
+    function rollDice(): void {
         if (!gameWon) {
             setDice(oldDice => oldDice.map(die =>
                 die.isHeld ?
@@ -38,7 +32,7 @@ export default function App() {
         }
     }
 
-    function hold(id: number) {
+    function hold(id: string): void {
         setDice(oldDice => oldDice.map(die =>
             die.id === id ?
                 { ...die, isHeld: !die.isHeld } :
@@ -46,7 +40,7 @@ export default function App() {
         ))
     }
 
-    const diceElements = dice.map(dieObj => (
+    const diceElements:JSX.Element[] = dice.map((dieObj:DiceNoFn):JSX.Element => (
         <Die
             key={dieObj.id}
             value={dieObj.value}

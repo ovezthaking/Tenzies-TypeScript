@@ -1,12 +1,8 @@
 import type { JSX } from "react"
+import type { Dice } from "./components/utils"
 
-type PropsType = {
-    isHeld: boolean,
-    hold:(id:number) => void,
-    value: number
-}
 
-export default function Die(props: PropsType): JSX.Element {
+export default function Die(props: Dice): JSX.Element {
     const styles: {backgroundColor:string} = {
         backgroundColor: props.isHeld ? "#59E391" : "white"
     }
