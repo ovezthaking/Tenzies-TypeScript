@@ -42,6 +42,7 @@ export default function App() {
 
     const diceElements:JSX.Element[] = dice.map((dieObj:DiceNoFn):JSX.Element => (
         <Die
+            id={dieObj.id}
             key={dieObj.id}
             value={dieObj.value}
             isHeld={dieObj.isHeld}
